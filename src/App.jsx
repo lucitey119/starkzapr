@@ -1,20 +1,22 @@
 // ============================================
 // APP.JSX — ROOT COMPONENT
-// Controls login vs dashboard routing + loading states
+// Fixed: correct walletAddress source + clean loading logic
 // ============================================
 
 import React from 'react';
-import { PrivyProvider, usePrivy } from '@privy-io/react-auth';
+import { PrivyProvider } from '@privy-io/react-auth';
 import './styles/global.css';
 import { useWallet } from './hooks/useWallet';
 import LoginPage from './components/LoginPage';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 
-// ── Inner app with better loading states ─────
+// ── Inner app with fixed loading states ─────
 const InnerApp = () => {
-  const { ready, authenticated, user, walletAddress } = usePrivy();
   const {
+    ready,
+    authenticated,
+    walletAddress,
     tokens,
     balancesLoading,
     error,
@@ -23,7 +25,7 @@ const InnerApp = () => {
     refreshBalances,
   } = useWallet();
 
-  // Privy is still initializing
+  // 1. Privy still initializing
   if (!ready) {
     return (
       <div style={styles.loadingScreen}>
@@ -33,7 +35,7 @@ const InnerApp = () => {
     );
   }
 
-  // After Google login — Privy is creating the Starknet embedded wallet
+  // 2. Logged in but embedded Starknet wallet still being created
   if (authenticated && !walletAddress) {
     return (
       <div style={styles.loadingScreen}>
@@ -44,12 +46,12 @@ const InnerApp = () => {
     );
   }
 
-  // Not logged in
+  // 3. Not logged in → show login page
   if (!authenticated || !walletAddress) {
     return <LoginPage onLogin={loginWithGoogle} error={error} />;
   }
 
-  // Fully ready — show dashboard
+  // 4. Fully ready → show dashboard
   return (
     <div>
       <Header
@@ -71,7 +73,7 @@ const InnerApp = () => {
 const App = () => {
   return (
     <PrivyProvider
-      appId={process.env.REACT_APP_PRIVY_APP_ID}
+      appId={process.env.REACT_APP_PRIVY_APP_ID || import.meta.env.VITE_PRIVY_APP_ID}
       config={{
         loginMethods: ['google'],
         appearance: {
