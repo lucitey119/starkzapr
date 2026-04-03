@@ -1,145 +1,127 @@
+// ============================================
+// APP.JSX — ROOT COMPONENT
+// Controls login vs dashboard routing + loading states
+// ============================================
+
 import React from 'react';
-import { PrivyProvider, usePrivy, useCreateWallet } from '@privy-io/react-auth';
-import LoginPage from './components/LoginPage.jsx';
+import { PrivyProvider, usePrivy } from '@privy-io/react-auth';
+import './styles/global.css';
+import { useWallet } from './hooks/useWallet';
+import LoginPage from './components/LoginPage';
+import Header from './components/Header';
+import Dashboard from './components/Dashboard';
 
+// ── Inner app with better loading states ─────
 const InnerApp = () => {
-  const { ready, authenticated, user } = usePrivy();
-  const { createWallet } = useCreateWallet();
+  const { ready, authenticated, user, walletAddress } = usePrivy();
+  const {
+    tokens,
+    balancesLoading,
+    error,
+    loginWithGoogle,
+    logout,
+    refreshBalances,
+  } = useWallet();
 
-  const [walletAddress, setWalletAddress] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    const createStarknetWallet = async () => {
-      if (!authenticated || !user || walletAddress) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const existing = user.linkedAccounts?.find(
-          (acc) => acc.type === 'wallet' && acc.chainType === 'starknet'
-        );
-
-        if (existing?.address) {
-          setWalletAddress(existing.address);
-        } else {
-          const wallet = await createWallet({ chainType: 'starknet' });
-          setWalletAddress(wallet.address);
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Failed to create Starknet wallet');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (authenticated && user) {
-      createStarknetWallet();
-    }
-  }, [authenticated, user, walletAddress, createWallet]);
-
-  const handleLogin = () => {
-    setError(null);
-    login();
-  };
-
-  if (!ready || loading) {
+  // Privy is still initializing
+  if (!ready) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: '#0a0a0c',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#fff'
-      }}>
-        <div style={{ fontSize: '4rem', marginBottom: '20px', color: '#7c5cfc' }}>✦</div>
-        <p style={{ fontSize: '1.3rem' }}>Creating your Starknet wallet...</p>
+      <div style={styles.loadingScreen}>
+        <div style={styles.loadingIcon}>✦</div>
+        <p style={styles.loadingText}>Initializing StarkWallet...</p>
       </div>
     );
   }
 
-  if (!authenticated || !walletAddress) {
-    return <LoginPage onLogin={handleLogin} error={error} />;
+  // After Google login — Privy is creating the Starknet embedded wallet
+  if (authenticated && !walletAddress) {
+    return (
+      <div style={styles.loadingScreen}>
+        <div style={styles.loadingIcon}>✦</div>
+        <p style={styles.loadingText}>Creating your Starknet wallet...</p>
+        <p style={styles.loadingSubtext}>This usually takes a few seconds</p>
+      </div>
+    );
   }
 
+  // Not logged in
+  if (!authenticated || !walletAddress) {
+    return <LoginPage onLogin={loginWithGoogle} error={error} />;
+  }
+
+  // Fully ready — show dashboard
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#0a0a0c',
-      color: '#fff',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '40px 20px',
-      textAlign: 'center'
-    }}>
-      <div style={{ fontSize: '60px', marginBottom: '20px' }}>✦</div>
-      <h1>Starknet Wallet Connected</h1>
-      <p style={{ color: '#7c5cfc', margin: '20px 0' }}>Mainnet • Google Login</p>
-
-      <div style={{
-        background: '#121217',
-        border: '1px solid #333',
-        borderRadius: '16px',
-        padding: '24px',
-        maxWidth: '420px',
-        width: '100%'
-      }}>
-        <p style={{ color: '#888', marginBottom: '10px' }}>Your Starknet Address</p>
-        <p style={{ 
-          fontFamily: 'monospace', 
-          wordBreak: 'break-all', 
-          fontSize: '15px',
-          background: '#0a0a0c',
-          padding: '16px',
-          borderRadius: '8px',
-          border: '1px solid #444'
-        }}>
-          {walletAddress}
-        </p>
-      </div>
-
-      <button 
-        onClick={() => window.location.reload()}
-        style={{
-          marginTop: '30px',
-          padding: '14px 32px',
-          background: '#7c5cfc',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '12px',
-          fontWeight: '600',
-          cursor: 'pointer'
-        }}
-      >
-        Refresh
-      </button>
+    <div>
+      <Header
+        walletAddress={walletAddress}
+        onLogout={logout}
+        onRefresh={refreshBalances}
+      />
+      <Dashboard
+        walletAddress={walletAddress}
+        tokens={tokens}
+        balancesLoading={balancesLoading}
+        onRefresh={refreshBalances}
+      />
     </div>
   );
 };
 
+// ── Root App with Privy ───────────────────────
 const App = () => {
   return (
     <PrivyProvider
-      appId={import.meta.env.VITE_PRIVY_APP_ID}
+      appId={process.env.REACT_APP_PRIVY_APP_ID}
       config={{
         loginMethods: ['google'],
-        appearance: { theme: 'dark', accentColor: '#7c5cfc' },
+        appearance: {
+          theme: 'dark',
+          accentColor: '#7c5cfc',
+        },
         embeddedWallets: {
-          createOnLogin: 'all-users',
+          createOnLogin: 'always',
           noPromptOnSignature: true,
+        },
+        defaultChain: {
+          id: process.env.REACT_APP_NETWORK === 'sepolia'
+            ? 'starknet-sepolia'
+            : 'starknet-mainnet',
         },
       }}
     >
       <InnerApp />
     </PrivyProvider>
   );
+};
+
+// Loading screen styles
+const styles = {
+  loadingScreen: {
+    minHeight: '100vh',
+    background: '#0a0a0f',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#fff',
+    textAlign: 'center',
+    padding: '20px',
+  },
+  loadingIcon: {
+    fontSize: '3.5rem',
+    marginBottom: '20px',
+    color: '#7c5cfc',
+    animation: 'pulse 2s infinite',
+  },
+  loadingText: {
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    marginBottom: '8px',
+  },
+  loadingSubtext: {
+    fontSize: '1rem',
+    color: '#888',
+  },
 };
 
 export default App;
