@@ -1,4 +1,3 @@
-
 // ============================================
 // LOGIN PAGE COMPONENT
 // First screen — Google OAuth entry point
