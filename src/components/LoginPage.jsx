@@ -1,26 +1,40 @@
+
+// ============================================
+// LOGIN PAGE COMPONENT
+// First screen — Google OAuth entry point
+// ============================================
+
 import React from 'react';
 
 const LoginPage = ({ onLogin, error }) => {
   return (
     <div style={styles.container}>
+      {/* Background effects */}
       <div style={styles.bgShape1} />
       <div style={styles.bgShape2} />
 
       <div style={styles.card}>
+        {/* Logo */}
         <div style={styles.logoWrap}>
           <div style={styles.logoIcon}>✦</div>
           <span style={styles.logoText}>StarkWallet</span>
         </div>
 
+        {/* Headline */}
         <h1 style={styles.headline}>
           Your crypto wallet.<br />
-          <span style={styles.headlineAccent}>No seed phrase needed.</span>
+          <span style={styles.headlineAccent}>
+            No seed phrase needed.
+          </span>
         </h1>
 
         <p style={styles.subtext}>
-          Login with Google and get a real Starknet wallet instantly. Send, receive, and swap tokens — powered by Starkzap and Privy.
+          Login with Google and get a real Starknet wallet
+          instantly. Send, receive, and swap tokens —
+          powered by Starkzap and Privy.
         </p>
 
+        {/* Feature pills */}
         <div style={styles.pills}>
           {['⚡ Gasless', '🔐 Google Login', '✦ Starknet Native'].map((pill) => (
             <span key={pill} style={styles.pill}>
@@ -29,9 +43,18 @@ const LoginPage = ({ onLogin, error }) => {
           ))}
         </div>
 
-        {error && <div style={styles.error}>⚠️ {error}</div>}
+        {/* Error message */}
+        {error && (
+          <div style={styles.error}>
+            ⚠️ {error}
+          </div>
+        )}
 
-        <button style={styles.googleBtn} onClick={onLogin}>
+        {/* Google Login Button */}
+        <button
+          style={styles.googleBtn}
+          onClick={onLogin}
+        >
           <div style={styles.btnContent}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -44,7 +67,9 @@ const LoginPage = ({ onLogin, error }) => {
         </button>
 
         <p style={styles.disclaimer}>
-          By continuing, a Starknet smart contract wallet is created and permanently linked to your Google account via Privy and Starkzap.
+          By continuing, a Starknet smart contract wallet
+          is created and permanently linked to your Google
+          account via Privy and Starkzap.
         </p>
       </div>
     </div>
@@ -61,8 +86,6 @@ const styles = {
     padding: '20px',
     position: 'relative',
     overflow: 'hidden',
-    width: '100%',
-    boxSizing: 'border-box'
   },
   bgShape1: {
     position: 'absolute',
@@ -91,16 +114,9 @@ const styles = {
     width: '100%',
     position: 'relative',
     zIndex: 1,
-    textAlign: 'center',
-    boxSizing: 'border-box'
+    textAlign: 'center'
   },
-  logoWrap: { 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    gap: '10px', 
-    marginBottom: '32px' 
-  },
+  logoWrap: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '32px' },
   logoIcon: {
     width: '40px',
     height: '40px',
@@ -113,33 +129,11 @@ const styles = {
     color: 'white',
     fontWeight: 'bold'
   },
-  logoText: { 
-    fontSize: '22px', 
-    fontWeight: '800', 
-    color: '#fff', 
-    letterSpacing: '-0.5px' 
-  },
-  headline: { 
-    fontSize: '32px', 
-    fontWeight: '800', 
-    color: '#fff', 
-    lineHeight: '1.2', 
-    marginBottom: '16px' 
-  },
+  logoText: { fontSize: '22px', fontWeight: '800', color: '#fff', letterSpacing: '-0.5px' },
+  headline: { fontSize: '32px', fontWeight: '800', color: '#fff', lineHeight: '1.2', marginBottom: '16px' },
   headlineAccent: { color: '#7c5cfc' },
-  subtext: { 
-    color: '#888', 
-    fontSize: '15px', 
-    lineHeight: '1.6', 
-    marginBottom: '24px' 
-  },
-  pills: { 
-    display: 'flex', 
-    flexWrap: 'wrap', 
-    justifyContent: 'center', 
-    gap: '8px', 
-    marginBottom: '32px' 
-  },
+  subtext: { color: '#888', fontSize: '15px', lineHeight: '1.6', marginBottom: '24px' },
+  pills: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginBottom: '32px' },
   pill: {
     background: 'rgba(124,92,252,0.1)',
     border: '1px solid rgba(124,92,252,0.2)',
@@ -158,27 +152,9 @@ const styles = {
     cursor: 'pointer',
     marginBottom: '24px'
   },
-  btnContent: { 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    gap: '12px', 
-    fontWeight: 'bold', 
-    color: '#000' 
-  },
-  error: { 
-    color: '#ff4d4d', 
-    background: 'rgba(255,77,77,0.1)', 
-    padding: '12px', 
-    borderRadius: '12px', 
-    marginBottom: '16px', 
-    fontSize: '13px' 
-  },
-  disclaimer: { 
-    color: '#444', 
-    fontSize: '11px', 
-    lineHeight: '1.5' 
-  }
+  btnContent: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', fontWeight: 'bold', color: '#000' },
+  error: { color: '#ff4d4d', background: 'rgba(255,77,77,0.1)', padding: '12px', borderRadius: '12px', marginBottom: '16px', fontSize: '13px' },
+  disclaimer: { color: '#444', fontSize: '11px', lineHeight: '1.5' }
 };
 
 export default LoginPage;
