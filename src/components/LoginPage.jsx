@@ -1,3 +1,4 @@
+// src/components/LoginPage.jsx
 import React from 'react';
 
 const LoginPage = ({ onLogin, error }) => {
@@ -18,12 +19,11 @@ const LoginPage = ({ onLogin, error }) => {
         </h1>
 
         <p style={styles.subtext}>
-          Login with Google and get a real Starknet Mainnet wallet instantly.<br />
-          Powered by Starkzap and Privy.
+          Login with Google and get a real Starknet wallet instantly. Send, receive, and swap tokens — powered by Starkzap and Privy.
         </p>
 
         <div style={styles.pills}>
-          {['⚡ Gasless', '🔐 Google Login', '✦ Starknet Mainnet'].map((pill) => (
+          {['⚡ Gasless', '🔐 Google Login', '✦ Starknet Native'].map((pill) => (
             <span key={pill} style={styles.pill}>
               {pill}
             </span>
@@ -45,7 +45,7 @@ const LoginPage = ({ onLogin, error }) => {
         </button>
 
         <p style={styles.disclaimer}>
-          By continuing, a Starknet smart contract wallet is created on Mainnet and permanently linked to your Google account via Privy and Starkzap.
+          By continuing, a Starknet smart contract wallet is created and permanently linked to your Google account via Privy and Starkzap.
         </p>
       </div>
     </div>
