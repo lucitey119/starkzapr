@@ -1,4 +1,3 @@
-// src/components/LoginPage.jsx
 import React from 'react';
 
 const LoginPage = ({ onLogin, error }) => {
@@ -62,6 +61,8 @@ const styles = {
     padding: '20px',
     position: 'relative',
     overflow: 'hidden',
+    width: '100%',
+    boxSizing: 'border-box'
   },
   bgShape1: {
     position: 'absolute',
@@ -90,9 +91,16 @@ const styles = {
     width: '100%',
     position: 'relative',
     zIndex: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    boxSizing: 'border-box'
   },
-  logoWrap: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '32px' },
+  logoWrap: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    gap: '10px', 
+    marginBottom: '32px' 
+  },
   logoIcon: {
     width: '40px',
     height: '40px',
@@ -105,11 +113,33 @@ const styles = {
     color: 'white',
     fontWeight: 'bold'
   },
-  logoText: { fontSize: '22px', fontWeight: '800', color: '#fff', letterSpacing: '-0.5px' },
-  headline: { fontSize: '32px', fontWeight: '800', color: '#fff', lineHeight: '1.2', marginBottom: '16px' },
+  logoText: { 
+    fontSize: '22px', 
+    fontWeight: '800', 
+    color: '#fff', 
+    letterSpacing: '-0.5px' 
+  },
+  headline: { 
+    fontSize: '32px', 
+    fontWeight: '800', 
+    color: '#fff', 
+    lineHeight: '1.2', 
+    marginBottom: '16px' 
+  },
   headlineAccent: { color: '#7c5cfc' },
-  subtext: { color: '#888', fontSize: '15px', lineHeight: '1.6', marginBottom: '24px' },
-  pills: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginBottom: '32px' },
+  subtext: { 
+    color: '#888', 
+    fontSize: '15px', 
+    lineHeight: '1.6', 
+    marginBottom: '24px' 
+  },
+  pills: { 
+    display: 'flex', 
+    flexWrap: 'wrap', 
+    justifyContent: 'center', 
+    gap: '8px', 
+    marginBottom: '32px' 
+  },
   pill: {
     background: 'rgba(124,92,252,0.1)',
     border: '1px solid rgba(124,92,252,0.2)',
@@ -128,9 +158,27 @@ const styles = {
     cursor: 'pointer',
     marginBottom: '24px'
   },
-  btnContent: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', fontWeight: 'bold', color: '#000' },
-  error: { color: '#ff4d4d', background: 'rgba(255,77,77,0.1)', padding: '12px', borderRadius: '12px', marginBottom: '16px', fontSize: '13px' },
-  disclaimer: { color: '#444', fontSize: '11px', lineHeight: '1.5' }
+  btnContent: { 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    gap: '12px', 
+    fontWeight: 'bold', 
+    color: '#000' 
+  },
+  error: { 
+    color: '#ff4d4d', 
+    background: 'rgba(255,77,77,0.1)', 
+    padding: '12px', 
+    borderRadius: '12px', 
+    marginBottom: '16px', 
+    fontSize: '13px' 
+  },
+  disclaimer: { 
+    color: '#444', 
+    fontSize: '11px', 
+    lineHeight: '1.5' 
+  }
 };
 
 export default LoginPage;
